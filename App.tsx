@@ -17,6 +17,8 @@ import { PortTesterPage } from './pages/PortTesterPage';
 import { WeatherPage } from './pages/WeatherPage';
 import { PageRoute } from './types';
 import { SeoHead } from './components/SeoHead';
+const GA_MEASUREMENT_ID = 'G-7ZEXQDY525';
+
 
 const App: React.FC = () => {
   // Use internal state for navigation (Memory Router)
@@ -64,6 +66,45 @@ const App: React.FC = () => {
     window.addEventListener('hashchange', handleHashCheck);
     return () => window.removeEventListener('hashchange', handleHashCheck);
   }, []);
+
+
+    // Send page_view to Google Analytics when the visible page changes
+  useEffect(() => {
+    // Map PageRoute -> URL path (same slugs you already use)
+    const routes: Record<PageRoute, string> = {
+      home: '/',
+      'speed-test': '/internet-speed-test',
+      'ip-scanner': '/what-is-my-ip-address',
+      'ping-monitor': '/ping-jitter-packet-loss-test',
+      'password-generator': '/strong-random-password-generator',
+      'qr-code': '/free-offline-qr-code-generator',
+      'device-info': '/browser-fingerprint-device-info',
+      'subnet-calc': '/ipv4-subnet-mask-calculator',
+      'file-transfer': '/file-transfer-time-bandwidth-calculator',
+      'dns-lookup': '/dns-records-lookup-tool',
+      'mac-lookup': '/mac-address-vendor-lookup',
+      'json-format': '/online-json-formatter-validator',
+      'port-test': '/open-port-checker-tool',
+      weather: '/local-weather-forecast-radar',
+    };
+
+    const path = routes[currentPage] ?? '/';
+
+    try {
+      // gtag is injected globally by the script in index.html
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const w = window as any;
+      if (typeof w.gtag === 'function') {
+        w.gtag('config', GA_MEASUREMENT_ID, {
+          page_path: path,
+        });
+      }
+    } catch (e) {
+      // ignore errors in non-browser environments
+      console.warn('GA page_view failed', e);
+    }
+  }, [currentPage]);
+
 
   const handleNavigate = (page: PageRoute) => {
     // 1. Update State immediately for instant feedback
