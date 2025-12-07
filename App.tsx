@@ -1,4 +1,5 @@
 
+import { AdBanner } from './AdBanner';
 import React, { useState, useEffect } from 'react';
 import { HomePage } from './pages/HomePage';
 import { SpeedTestPage } from './pages/SpeedTestPage';
@@ -260,9 +261,17 @@ const App: React.FC = () => {
                 </>
             );
     }
-  };
+   };
 
-  return renderPage();
+  return (
+    <>
+      {/* Global banner ad on all pages */}
+      <AdBanner />
+
+      {/* Actual page content */}
+      {renderPage()}
+    </>
+  );
 };
 
 export default App;
