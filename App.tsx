@@ -304,15 +304,8 @@ const App: React.FC = () => {
     }
    };
 
-  return (
-    <>
-      {/* Global banner ad on all pages */}
-      <AdBanner />
-
-      {/* Actual page content */}
-      {renderPage()}
-    </>
-  );
+    return renderPage();
 };
+
 
 export default App;
